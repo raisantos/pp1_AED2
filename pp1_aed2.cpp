@@ -151,16 +151,16 @@ bool Fila<T>::vazia(){
 template<class T>
 class No {
 public:
-	T item;
+	Sistema<T> item;
     No *prox;
 
     No() {}
 
-    T getSistema() {
+    Sistema<T> getSistema() {
         return item;
     }
 
-    void setSistema(T item) {
+    void setSistema(Sistema<T> item) {
         this -> item = item;
     }
 
@@ -176,17 +176,17 @@ public:
 template<class T>
 class Pilha {
 private:
-    T *fundo, *topo;
+    No<T> *fundo, *topo;
     int estado;
 
 public:
     Pilha();
 
-    T* getFundo(){
+    No<T>* getFundo(){
     	return fundo;
     }
 
-    void setFundo(T *fundo) {
+    void setFundo(No<T> *fundo) {
     	this->fundo = fundo;
     }
 
@@ -194,7 +194,7 @@ public:
         return topo;
     }
 
-    void setTopo(T *topo){
+    void setTopo(No<T> *topo){
     	this->topo = topo;
     }
 
@@ -226,10 +226,10 @@ bool Pilha<T>::vazia() {
 
 template<class T>
 void Pilha<T>::empilha(T item) {
-    No<T> *aux = new No<T>();
-    topo -> setSistema(item);
-    aux -> setProx(topo);
-    topo = aux;
+    No<T> *aux=new No<T>();
+    topo->setSistema(item);
+    aux->setProx(topo);
+    topo=aux;
 }
 
 template<class T>
@@ -327,7 +327,7 @@ void Grafo<T>::imprime() {
 }
 
 template<class T>
-void bfs(T &g, T &s, T &final, T &visita, T &caminho){
+void bfs(Grafo<T> &g, Sistema<T> &s, Sistema<T> &final, Pilha<T> &visita, Pilha<T> &caminho){
 	for(int i = 1; i <= g.getN(); i++){
 		if(g.getAdj()[i].getCor() != PRETO){
 			g.getAdj()[i].setCor(BRANCO);
@@ -423,8 +423,8 @@ void dfs(Grafo &g){
 int main(int argc, const char * argv[]) {
 	int ordem, tamanho, qtd_inimigos, inimigo, vertice_1, vertice_2, sistema_inicial, sistema_final;
 
-	Pilha visita;
-	Pilha caminho;
+	Pilha<int> visita;
+	Pilha<int> caminho;
 
 	cin >> ordem;
 	cin >> tamanho;
