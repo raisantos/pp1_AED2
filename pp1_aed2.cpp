@@ -84,13 +84,13 @@ void Sistema<T>::imprimeVertices(){
 template<class T>
 class Fila{
 private:
-	T *vertices;
+	Sistema<T> *vertices;
 	int frente, tras;
 	int TAM;
 public:
 	Fila(int tam);
-	void enfileira(T);
-	T desenfileira();
+	void enfileira(Sistema<T>);
+	Sistema<T> desenfileira();
 	void mostra();
 	bool vazia();
 };
@@ -98,13 +98,13 @@ public:
 template<class T>
 Fila<T>::Fila(int tam){
 	TAM = tam;
-	vertices = new T[TAM];
+	vertices = new Sistema<T>[TAM];
 	frente = 0;
 	tras = frente;
 }
 
 template<class T>
-void Fila<T>::enfileira (T item){
+void Fila<T>::enfileira (Sistema<T> item){
 	if((tras + 1) % TAM == frente){
 		cout << "Fila Cheia!!" << endl;
 	}
@@ -116,14 +116,14 @@ void Fila<T>::enfileira (T item){
 }
 
 template<class T>
-T Fila<T>::desenfileira(){
+Sistema<T> Fila<T>::desenfileira(){
 	if(frente == tras){
 		cout << "Fila vazia!!" << endl;
 		return NULL;
 	}
 	else
 	{
-		T item;
+		Sistema<T> item;
 		item = vertices[frente];
 		frente = (frente + 1) % TAM;
 		return item;
@@ -190,7 +190,7 @@ public:
     	this->fundo = fundo;
     }
 
-    T* getTopo(){
+    No<T>* getTopo(){
         return topo;
     }
 
@@ -206,8 +206,8 @@ public:
     	this->estado = estado;
     }
 
-    No<T> desempilha();
-    void empilha(T);
+    Sistema<T> desempilha();
+    void empilha(Sistema<T>);
     bool vazia();
     void mostra();
 };
@@ -225,7 +225,7 @@ bool Pilha<T>::vazia() {
 }
 
 template<class T>
-void Pilha<T>::empilha(T item) {
+void Pilha<T>::empilha(Sistema<T> item) {
     No<T> *aux=new No<T>();
     topo->setSistema(item);
     aux->setProx(topo);
@@ -233,10 +233,10 @@ void Pilha<T>::empilha(T item) {
 }
 
 template<class T>
-No<T> Pilha<T>::desempilha() {
+Sistema<T> Pilha<T>::desempilha() {
 	No<T> *aux = topo;
 	topo = topo->getProx();
-	T item = topo->getSistema();
+	Sistema<T> item = topo->getSistema();
 	//item = topo->getItem();
 	delete aux;
 	return item;
@@ -266,8 +266,8 @@ public:
   	void insere(T, T);
   	void imprime();
   	void destroy();
-  	void bfs(T &,T &,T &,T &,T &);
-  	void descobreCaminho(T,T);
+  	void bfs(Grafo<T> &, Sistema<T> &,Sistema<T> &,Pilha<T> &,Pilha<T> &);
+  	void descobreCaminho(Pilha<T> &,Pilha<T> &);
 
 
 	Sistema<T>* getAdj(){
@@ -327,7 +327,20 @@ void Grafo<T>::imprime() {
 }
 
 template<class T>
-void bfs(Grafo<T> &g, Sistema<T> &s, Sistema<T> &final, Pilha<T> &visita, Pilha<T> &caminho){
+void Grafo<T>::descobreCaminho(Pilha<T> &visita, Pilha<T> &caminho){
+	caminho.empilha(visita.desempilha());
+	while(!visita.vazia()){
+		if(caminho.getTopo()->getProx()->getSistema().getPredecessor() == visita.getTopo()->getProx()->getSistema().getVertex()){
+			caminho.empilha(visita.desempilha());
+		}
+		else{
+			visita.desempilha();
+		}
+	}
+}
+
+template<class T>
+void Grafo<T>::bfs(Grafo<T> &g, Sistema<T> &s, Sistema<T> &final, Pilha<T> &visita, Pilha<T> &caminho){
 	for(int i = 1; i <= g.getN(); i++){
 		if(g.getAdj()[i].getCor() != PRETO){
 			g.getAdj()[i].setCor(BRANCO);
@@ -341,7 +354,7 @@ void bfs(Grafo<T> &g, Sistema<T> &s, Sistema<T> &final, Pilha<T> &visita, Pilha<
 
 	Fila<T> fila(g.getN());
 	fila.enfileira(s);
-	T u; T posicao; bool continuar = 1;
+	Sistema<T> u; int posicao; bool continuar = 1;
 	while(continuar){
 		u = fila.desenfileira();
 		if(u.getVertex() == final.getVertex()){
@@ -362,19 +375,6 @@ void bfs(Grafo<T> &g, Sistema<T> &s, Sistema<T> &final, Pilha<T> &visita, Pilha<
 		visita.empilha(u);
 	}
 	descobreCaminho(visita, caminho);
-}
-
-template<class T>
-void descobreCaminho(T &visita, T &caminho){
-	caminho.empilha(visita.desempilha());
-	while(!visita.vazia()){
-		if(caminho.getTopo()->getProx()->getSistema().getPredecessor() == visita.getTopo()->getProx()->getSistema().getVertex()){
-			caminho.empilha(visita.desempilha());
-		}
-		else{
-			visita.desempilha();
-		}
-	}
 }
 
 /*void Grafo::destroy() {
