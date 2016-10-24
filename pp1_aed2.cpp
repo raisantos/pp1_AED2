@@ -206,7 +206,7 @@ public:
     	this->estado = estado;
     }
 
-    T desempilha();
+    No<T> desempilha();
     void empilha(T);
     bool vazia();
     void mostra();
@@ -226,15 +226,15 @@ bool Pilha<T>::vazia() {
 
 template<class T>
 void Pilha<T>::empilha(T item) {
-    T *aux = new No<T>();
+    No<T> *aux = new No<T>();
     topo -> setSistema(item);
     aux -> setProx(topo);
     topo = aux;
 }
 
 template<class T>
-T Pilha<T>::desempilha() {
-	T *aux = topo;
+No<T> Pilha<T>::desempilha() {
+	No<T> *aux = topo;
 	topo = topo->getProx();
 	T item = topo->getSistema();
 	//item = topo->getItem();
@@ -244,7 +244,7 @@ T Pilha<T>::desempilha() {
 
 template<class T>
 void Pilha<T>::mostra(){
-	T *aux = new No<T>();
+	No<T> *aux = new No<T>();
 	aux = topo->getProx();
 	while(aux != NULL){
 		cout << aux->getSistema().getVertex() << " ";
@@ -256,7 +256,7 @@ void Pilha<T>::mostra(){
 template<class T>
 class Grafo {
 private:
-  	T *adj;
+  	Sistema<T> *adj;
   	int n, m;
 
 public:
@@ -270,10 +270,10 @@ public:
   	void descobreCaminho(T,T);
 
 
-	T* getAdj(){
+	Sistema<T>* getAdj(){
 		return adj;
 	}
-	void setAdj(T* adj){
+	void setAdj(Sistema<T>* adj){
 		this->adj = adj;
 	}
 	int getN(){
@@ -299,7 +299,7 @@ Grafo<T>::Grafo (int n) {
 template<class T>
 void Grafo<T>::iniciar(int n) {
     this->n = n;
-    adj = new T[n+1];
+    adj = new Sistema<T>[n+1];
 }
 
 template<class T>
